@@ -31,7 +31,7 @@ npm install @angular/cli
 
 - Open new folder and run following command in your terminal
 ```
-git clone https://github.com/karthikeyankdeveloper/LiveLocationTracker-Angular
+git clone https://github.com/kevinquintanah12/logix-webclient
 ```
 
 ### SetUp
