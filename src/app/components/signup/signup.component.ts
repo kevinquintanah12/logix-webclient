@@ -2,12 +2,29 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Apollo, gql } from 'apollo-angular';
 import { confirmValidator } from 'src/app/confirm.validator';
 import { CryptographyService } from 'src/app/services/cryptography.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { LoaderService } from 'src/app/services/loader.service';
 import { LoggerService } from 'src/app/services/logger.service';
 import { environment } from 'src/environments/environment';
+
+
+// Definición de la mutación GraphQL
+const CREATE_USER = gql`
+  mutation CreateUser($username: String!, $email: String!, $password: String!) {
+    createUser(username: $username, email: $email, password: $password) {
+      user {
+        id
+        username
+        email
+      }
+    }
+  }
+`;
+
+
 
 @Component({
   selector: 'app-signup',
@@ -37,12 +54,16 @@ export class SignupComponent{
   protected addUser():void{
     this.disableButton = true;
     this.loaderService.setLoader(true);
-
+  
     let name = this.signupForm.controls['name'].value;
     let email = (this.signupForm.controls['email'].value+"").toLowerCase();
     let password = this.signupForm.controls['password'].value;
-
+  
+    // AÑADIR SOLO ESTA LÍNEA NUEVA
+    console.log("Intentando crear usuario con GraphQL:", { username: name, email: email });
+  
     if(this.signupForm.invalid){
+      // resto del código original...
       alert("Wrong Data,Please fill all Field");
       LoggerService.info('Invalid data from signup feild');
       this.disableButton = false;
