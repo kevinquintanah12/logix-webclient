@@ -8,6 +8,16 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { LoaderService } from 'src/app/services/loader.service';
 import { LoggerService } from 'src/app/services/logger.service';
 import { environment } from 'src/environments/environment';
+import { Apollo, gql } from 'apollo-angular';
+
+// Mutación GraphQL
+const LOGIN_USER = gql`
+  mutation tokenAuth($username: String!, $password: String!) {
+    tokenAuth(username: $username, password: $password) {
+      token
+    }
+  }
+`;
 
 @Component({
   selector: 'app-login',
@@ -21,7 +31,12 @@ export class LoginComponent{
   protected showPassword:boolean = environment.conditionFalse;
   protected disableButton:boolean = environment.conditionFalse;
 
-  constructor(private databaseService:DatabaseService,private loaderService:LoaderService,private formBuilder:FormBuilder,private accessService:AccessService,private router:Router,private cryptographyService:CryptographyService){}
+  constructor(private databaseService:DatabaseService,
+    private loaderService:LoaderService,
+    private formBuilder:FormBuilder,
+    private accessService:AccessService,
+    private router:Router,
+    private cryptographyService:CryptographyService){}
 
   protected togglePassword():void{
     this.showPassword = !this.showPassword;
