@@ -13,6 +13,7 @@ import { LoggerService } from './services/logger.service';
 import { environment } from 'src/environments/environment';
 import { UpdateService } from './SwUpdate/update.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

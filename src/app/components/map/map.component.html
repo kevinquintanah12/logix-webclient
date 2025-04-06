@@ -1,18 +1,46 @@
+<!-- Loader (muestra mientras carga los datos) -->
 <div class="loader" *ngIf="loader">
   <img [src]="'assets/load.svg'" alt="Loading of Map Page">
 </div>
 
+<!-- Información del kit -->
 <div class="kitdetail">
   <div class="left">
-      <p>Last Response: {{timestamp|date:'MMMM d, y, h:mm:ss a'}} &nbsp; <button (click)="fetchData()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button></p>
+    <p>
+      Last Response: {{ timestamp | date:'MMMM d, y, h:mm:ss a' }}
+      &nbsp;
+      <button (click)="searchRoute()">
+        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+      </button>
+    </p>
   </div>
-  <div class="right">
-    <a routerLink="/"><i class="fa-solid fa-house"></i> Home</a>
-    <p><i class="fa-solid fa-plus"></i> Kit Detail</p>
-  </div>
-
 </div>
 
-<div id="map"></div>
+<!-- Sección de entrada de guía -->
+<div class="guia-section">
+  <p>Ingresa tu guía</p>
+  <input type="text" formControlName="guideNumber" placeholder="Número de guía" class="guia-input">
+</div>
 
+<!-- Información de la ruta obtenida -->
+<div *ngIf="rutaData">
+  <h3>Ruta #{{ rutaData.id }}</h3>
+  <p><strong>Distancia:</strong> {{ rutaData.distancia }}</p>
+  <p><strong>Prioridad:</strong> {{ rutaData.prioridad }}</p>
+  <p><strong>Estado:</strong> {{ rutaData.estado }}</p>
+  <p><strong>Inicio:</strong> {{ rutaData.fechaInicio }}</p>
+  <p><strong>Fin:</strong> {{ rutaData.fechaFin }}</p>
 
+  <h4>Conductor</h4>
+  <p>{{ rutaData.conductor?.nombre }}</p>
+
+  <h4>Vehículo</h4>
+  <p>{{ rutaData.vehiculo?.marca }}</p>
+
+  <h4>Entregas</h4>
+  <ul>
+    <li *ngFor="let entrega of rutaData.entregas">
+      #{{ entrega.id }} - Guía: {{ entrega.paquete?.numeroGuia }} - Estado: {{ entrega.estado }}
+    </li>
+  </ul>
+</div>

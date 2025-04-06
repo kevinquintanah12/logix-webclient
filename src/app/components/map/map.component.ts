@@ -1,10 +1,8 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { LoggerService } from 'src/app/services/logger.service';
-import { environment } from 'src/environments/environment';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms'; // Importa FormControl y FormGroup
+import { RouterModule } from '@angular/router';
 
 const RUTA_POR_GUIA = gql`
   query RutaPorGuia($numeroGuia: String!) {
@@ -36,80 +34,52 @@ const RUTA_POR_GUIA = gql`
 `;
 
 @Component({
-  selector: 'app-map',
+  selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
-export class MapComponent implements OnDestroy {
-  
-  protected remoteId: any;
-  protected loader: boolean = environment.conditionTrue;
-  protected timestamp: any;
-  private reload: boolean = environment.conditionFalse;
-  private mapFetchSubscription: any;
-  
-  constructor(
-    private activatedRoute: ActivatedRoute, 
-    private router: Router, 
-    private apollo: Apollo
-  ) {
-    this.activatedRoute.queryParamMap.subscribe((query) => {
-      this.remoteId = query.get("id");
-      if (this.remoteId == null || this.remoteId == "") {
-        this.router.navigate(["/"], { replaceUrl: true });
-        LoggerService.warn("Unable to fetch data, UID Not Found");
-      } else {
-        this.fetchData();
-      }
-    });
-  }
+export class MapComponent {
+  loader = false;
+  timestamp: Date | null = null;
+  rutaData: any = null;
 
-  // Se realiza la consulta GraphQL usando Apollo
-  protected fetchData(): void {
+  // Definir un FormGroup para el formulario reactivo
+  guideForm = new FormGroup({
+    guideNumber: new FormControl('') // Creamos un control para el número de guía
+  });
+
+  constructor(private apollo: Apollo) {}
+
+  searchRoute(): void {
+    const guideNumber = this.guideForm.get('guideNumber')?.value; // Obtener el valor del campo de formulario
+
+    if (!guideNumber) {
+      alert('Por favor ingresa un número de guía.');
+      return;
+    }
+
     this.loader = true;
 
-    this.apollo.watchQuery<any>({
-      query: RUTA_POR_GUIA,
-      variables: { numeroGuia: this.remoteId }
-    })
-    .valueChanges
-    .subscribe(({ data, loading }) => {
-      if (loading) {
-        this.loader = true;  // Muestra el loader mientras se espera la respuesta
-      }
-
-      if (!data || !data.rutaPorGuia) {
-        alert("No Data Found");
-        LoggerService.warn("Unable to fetch data, UID Not Found");
-        this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-        return;
-      }
-
-      let ruta = data.rutaPorGuia;
-      if (!ruta.estado || ruta.estado === "INACTIVO") {
-        alert("Device Not Yet Activated");
-        LoggerService.info("Device Not Yet Activated");
-        this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-        return;
-      }
-
-      // Si la respuesta es válida, mostramos los detalles del mapa
-      this.timestamp = new Date(ruta.fechaInicio);
-      let maps = document.getElementById('map');
-      setTimeout(() => {
-        if (maps) {
+    this.apollo
+      .watchQuery<any>({
+        query: RUTA_POR_GUIA,
+        variables: {
+          numeroGuia: guideNumber,
+        },
+      })
+      .valueChanges.subscribe({
+        next: ({ data }) => {
+          this.rutaData = data?.rutaPorGuia;
           this.loader = false;
-          maps.innerHTML = `<iframe src="https://maps.google.com/maps?q=${ruta.entregas[0]?.paquete?.id}&hl=en&z=16&t=k&output=embed" style="border:0; width: 100%; height: 100%;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-        }
-      }, 1500);
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.mapFetchSubscription) {
-      this.mapFetchSubscription.unsubscribe();
-    }
+          this.timestamp = new Date();
+          console.log('Ruta por guía:', this.rutaData);
+        },
+        error: (err) => {
+          console.error('Error al obtener la ruta:', err);
+          this.loader = false;
+        },
+      });
   }
 }
