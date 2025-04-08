@@ -1,86 +1,55 @@
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { DatabaseService } from 'src/app/services/database.service';
-import { LoggerService } from 'src/app/services/logger.service';
-import { environment } from 'src/environments/environment';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-map',
+  selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  standalone:true,
-  imports:[CommonModule,RouterModule]
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
-export class MapComponent implements OnDestroy{
+export class MapComponent {
+  loader = false;
+  timestamp: Date | null = null;
 
-  protected remoteId:any;
-  protected loader:boolean = environment.conditionTrue;
-  protected timestamp:any;
-  private reload:boolean = environment.conditionFalse;
-  private mapFetchSubscription:any;
+  // Definir un FormGroup para el formulario reactivo
+  guideForm = new FormGroup({
+    guideNumber: new FormControl('') // Creamos un control para el número de guía
+  });
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private databaseService: DatabaseService) {
-    this.activatedRoute.queryParamMap.subscribe((query) => {
-      this.remoteId = query.get("id");
-      if (this.remoteId == null || this.remoteId == "") {
-        router.navigate(["/"], { replaceUrl: true });
-        LoggerService.warn("Unable to fetch data, UID Not Found");
-      } else {
-        this.fetchData();
-      }
-    });
+  constructor() {}
+
+  // Método para simular la carga de datos (esto reemplazaría la consulta a la base de datos)
+  fetchData(): void {
+    this.loader = true; // Activar el loader mientras simulamos la carga
+
+    setTimeout(() => {
+      // Simulamos que los datos se han cargado después de 2 segundos
+      this.timestamp = new Date(); // Actualizamos el timestamp con la fecha y hora actuales
+      this.loader = false; // Desactivamos el loader
+    }, 2000); // Simulamos una espera de 2 segundos
   }
 
-  protected fetchData():void{
-    this.loader = true;
-    this.mapFetchSubscription = this.databaseService.mapFetch(this.remoteId).subscribe((data) => {
-      if (data == null) {
-        alert("No Data Found");
-        LoggerService.warn("Unable to fetch data, UID Not Found");
-        this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-      } else {
-        let jsonData = JSON.parse(JSON.stringify(data));
-        if (jsonData.active == false) {
-          alert("Device Not Yet Activated");
-          LoggerService.info("Device Not Yet Activated");
-          this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-        }
-        else if (jsonData.enable == false) {
-          alert("Device currrently disabled");
-          LoggerService.info("Device currrently disabled");
-          this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-        }
-        else if(this.reload || prompt("Enter Password")==jsonData.password  ){
-          this.reload = environment.conditionTrue;
-          let maps = document.getElementById('map');
-          setTimeout(() => {
-            this.timestamp = new Date(jsonData.timestamp);
-            if (maps) {
-              this.loader = false;
-              maps.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + jsonData?.lat + ',' + jsonData?.lon + '&hl=en&z=16&t=k&amp;output=embed" style="border:0; width: 100%; height: 100%;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
-            }
-          }, 1500);
-        }
-        else {
-          alert("Incorrect Password");
-          LoggerService.info("Entered Device Password Incorrect");
-          if(confirm("Are you want to retry !")){
-            this.fetchData();
-          }else{
-          this.router.navigate(["/"], { replaceUrl: environment.conditionTrue });
-          }
-        }
-      }
+  // Método para manejar la entrada de número de guía (si es necesario)
+  searchRoute(): void {
+    const guideNumber = this.guideForm.get('guideNumber')?.value;
 
-    });
-  }
-
-  ngOnDestroy(){
-    if(this.mapFetchSubscription){
-      this.mapFetchSubscription.unsubscribe();
+    if (!guideNumber) {
+      alert('Por favor ingresa un número de guía.');
+      return;
     }
-  }
 
+    this.loader = true;
+
+    // Aquí iría la lógica para buscar la ruta en la base de datos o mediante un API, por ejemplo.
+
+    setTimeout(() => {
+      // Simulamos una búsqueda exitosa de la ruta
+      console.log('Ruta encontrada para el número de guía:', guideNumber);
+      this.loader = false;
+      this.timestamp = new Date(); // Actualizamos el timestamp
+    }, 2000); // Simulamos una espera de 2 segundos para la búsqueda
+  }
 }

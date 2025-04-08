@@ -1,18 +1,48 @@
+<!-- Loader (muestra mientras carga los datos) -->
 <div class="loader" *ngIf="loader">
   <img [src]="'assets/load.svg'" alt="Loading of Map Page">
 </div>
 
+<!-- Información del kit (lado izquierdo y derecho) -->
 <div class="kitdetail">
   <div class="left">
-      <p>Last Response: {{timestamp|date:'MMMM d, y, h:mm:ss a'}} &nbsp; <button (click)="fetchData()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button></p>
+    <p>
+      Last Response: {{ timestamp | date:'MMMM d, y, h:mm:ss a' }}
+      &nbsp;
+      <button (click)="fetchData()">
+        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+      </button>
+    </p>
   </div>
   <div class="right">
     <a routerLink="/"><i class="fa-solid fa-house"></i> Home</a>
     <p><i class="fa-solid fa-plus"></i> Kit Detail</p>
   </div>
-
 </div>
 
-<div id="map"></div>
+<!-- Contenido principal con margen superior para evitar que el header lo tape -->
+<div class="content" style="margin-top: 80px;"> <!-- Ajusta el valor según el tamaño de tu header -->
+  
+  <h1>Eficiencia en cada ruta</h1>
 
+  <!-- Botones de acción (Tarifa y Rastreo) -->
+  <div class="button-row">
+    <button class="main-btn">Tarifa y envíos</button>
+    <button class="main-btn">Rastreo</button>
+  </div>
 
+  <!-- Sección de entrada de guía -->
+  <div class="guia-section">
+    <p>Ingresa tu guía</p>
+    <input type="text" placeholder="Número de guía" class="guia-input">
+  </div>
+
+  <!-- Mapa (este div es donde se cargará el mapa dinámicamente) -->
+  <div id="map" style="margin: 20px; padding: 10px; border-radius: 8px; background-color: #f5f5f5; height: 450px;">
+    <iframe src="https://maps.google.com/maps?q=Ciudad+de+México&hl=en&z=16&t=k&output=embed" 
+            style="border:0; width: 100%; height: 100%; border-radius: 8px;" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>

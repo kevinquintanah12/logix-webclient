@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "^17.0.8",
     "@angular/router": "^17.3.12",
     "@angular/service-worker": "^17.0.8",
-    "@apollo/client": "^3.13.5",
+    "@apollo/client": "^3.13.6",
     "apollo-angular": "^10.0.3",
     "graphql": "^16.10.0",
     "location-tracker": "file:",
