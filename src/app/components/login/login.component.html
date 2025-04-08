@@ -13,7 +13,7 @@
           <div class="key">
             <input [type]="'email'" placeholder="Email"  formControlName="email" name="email">
 
-            <small *ngIf="loginForm.controls['email'].errors?.['required'] && loginForm.controls['email'].touched">Enter Email Address</small>
+            <small *ngIf="loginForm.controls['email'].errors?.['required'] && loginForm.controls['email'].touched">Enter Email</small>
             <small *ngIf="(loginForm.controls['email'].errors?.['email'] || loginForm.controls['email'].errors?.['pattern']) && loginForm.controls['email'].dirty">Enter Valid Email Address</small>
           </div>
           <div class="key">
@@ -40,4 +40,3 @@
     </div>
   </div>
 </div>
-

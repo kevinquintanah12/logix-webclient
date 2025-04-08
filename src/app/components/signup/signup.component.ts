@@ -24,8 +24,6 @@ const CREATE_USER = gql`
   }
 `;
 
-
-
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
