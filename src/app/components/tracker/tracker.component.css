@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.content {
+    background: linear-gradient(135deg, #003060, #004080); /* Degradado azul */
+    padding: 40px;
+    min-height: 91.4vh; /* Ocupa toda la altura de la pantalla */
+    margin-top: 0; /* Eliminar cualquier margen superior para asegurar que esté alineado */
+    display: flex;
+    flex-direction: column;
+  }
+
+.header-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.icono-header {
+    margin-top: 120px;
+  width: 100px;
+  height: 100px;
+}
+
+.content h1 {
+  text-align: center;
+  color: white; /* Cambiar a blanco */
+  font-size: 32px;
+  margin-top: 20px;
+  font-weight: bold;
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.guia-section {
+  font-family: 'Bebas Neue', sans-serif;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.guia-section p {
+  font-size: 18px;
+  color: white; /* Cambiar a blanco */
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.guia-input {
+  padding: 10px;
+  width: 280px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.main-btn {
+    background-color: white;  /* Fondo blanco */
+    color: #003060;  /* Letra azul oscuro */
+    font-size: 18px;
+    padding: 12px 24px;
+    border: 2px solid #003060;  /* Borde azul oscuro */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .main-btn:hover {
+    background-color: #003060; /* Fondo azul oscuro */
+    color: white;  /* Letra blanca cuando pasa el ratón */
+  }
+
+.resultado {
+  margin: 30px auto;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo con opacidad */
+  font-family: 'Segoe UI', sans-serif;
+  color: #003060; /* Azul oscuro */
+}
+
+.resultado h2,
+.resultado h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #003060; /* Azul oscuro */
+}
+
+.timeline {
+  list-style: none;
+  padding-left: 20px;
+  border-left: 4px solid #003060; /* Azul oscuro */
+  margin-top: 20px;
+}
+
+.timeline li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.timeline .dot {
+  position: absolute;
+  top: 0;
+  left: -10px;
+  width: 12px;
+  height: 12px;
+  background-color: #003060; /* Azul oscuro */
+  border-radius: 50%;
+}

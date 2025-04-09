@@ -1,0 +1,39 @@
+<div class="content">
+        <div class="header-icon">
+          <img src="https://firebasestorage.googleapis.com/v0/b/ammiboapijorgeluistuzmoreno.appspot.com/o/9422848.png?alt=media&token=2df5a806-5902-4556-98de-c683822ad07b" alt="Icono" class="icono-header" />
+        </div>
+  <h1>Rastreo de Paquetes</h1>
+
+  <div class="guia-section">
+    <p>Ingrese su número de guía</p>
+    <input
+      class="guia-input"
+      type="text"
+      formControlName="numeroGuia"
+      placeholder="1SF69LM7JO"
+    />
+    <br />
+    <button class="main-btn" (click)="rastrearPaquete()" [disabled]="loader">
+      {{ loader ? 'Buscando...' : 'Rastrear paquete' }}
+    </button>
+  </div>
+
+  <div class="loader" *ngIf="loader">
+    <img src="https://i.gifer.com/ZZ5H.gif" alt="Cargando..." width="50" />
+  </div>
+
+  <div class="resultado" *ngIf="resultado">
+    <h2>📦 Resultado del Rastreo</h2>
+    <h3>Número de guía: {{ resultado.guia }}</h3>
+    <p><strong>Estado actual:</strong> {{ resultado.estado }}</p>
+    <p><strong>Última actualización:</strong> {{ resultado.actualizado }}</p>
+
+    <ul class="timeline">
+      <li *ngFor="let paso of resultado.historial">
+        <div class="dot"></div>
+        <strong>{{ paso.estado }}</strong> <br />
+        <small>{{ paso.fecha }}</small>
+      </li>
+    </ul>
+  </div>
+</div>
