@@ -6,6 +6,7 @@ import { IsUserGuard } from './guards/is-user.guard';
 import { HeaderComponent } from './components/Header/Header.component';
 import { LandingComponent } from './components/Landing/Landing.component';
 import { MapComponent } from './components/map/map.component'; // Asegúrate de que esta ruta sea correcta
+import { TrackerComponent } from './components/tracker/tracker.component';
 
 const routes: Routes = [
   {
@@ -45,14 +46,19 @@ const routes: Routes = [
         title: 'Tracker | About'
       },
       {
-        path: 'map', // Ahora usando 'component' en vez de 'loadComponent'
-        component: MapComponent, // Cambié de 'loadComponent' a 'component'
+        path: 'map',
+        loadComponent: () => import('./components/map/map.component').then(m => m.MapComponent),
         title: 'Tracker | Map'
       },
       {
         path: 'admin',
         canActivate: [IsAdminGuard],
         loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule)
+      },
+      {
+        path: 'tracker',
+        loadComponent: () => import('./components/tracker/tracker.component').then(c => c.TrackerComponent),
+        title: 'Tracker | Tracking',
       }
     ]
   },

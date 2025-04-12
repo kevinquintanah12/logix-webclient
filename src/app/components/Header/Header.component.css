@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 /* Estilos generales */
 * {
   box-sizing: border-box;
@@ -5,53 +7,54 @@
   padding: 0;
 }
 
-/* Header blanco */
+/* Header estilizado */
 .header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background-color: white;
-  color: #1d4ed8;
+  padding: 1rem 2rem; /* Menor padding para reducir el tamaño del header */
+  background-color: white; /* Volvemos a blanco */
+  color: #003060;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 999;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 10px; /* Añadido pequeño margen inferior */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra ligera */
+  margin-bottom: 10px; /* Espacio entre el header y el contenido */
+  border-bottom: 2px solid #1c2333; /* Borde inferior en azul */
+  font-family: 'Bebas Neue', sans-serif;
 }
 
-/* Logo */
 .logo-container {
   flex: 1 1 auto;
 }
 .logo-container img.logo {
-  height: 55px;
+  height: 50px; /* Reducimos el tamaño del logo */
   object-fit: contain;
 }
 
-/* Navegación */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem; /* Menos espacio entre los enlaces */
   flex: 2 1 auto;
   justify-content: center;
   flex-wrap: wrap;
 }
 .nav-links a {
-  color: #1d4ed8;
+  color: #3164f0;
   text-decoration: none;
   font-weight: 600;
-  font-size: 16px;
-  transition: color 0.3s ease;
+  font-size: 18px; /* Mantiene el tamaño de letra grande */
+  transition: color 0.3s ease, transform 0.3s ease;
+  font-family: 'Bebas Neue', sans-serif;
 }
 .nav-links a:hover {
-  color: #2563eb;
+  color: #2563eb; /* Azul brillante para hover */
+  transform: scale(1.1); /* Efecto de zoom */
 }
 
-/* Botones */
 .auth-buttons {
   display: flex;
   gap: 0.5rem;
@@ -63,22 +66,25 @@
   background-color: white;
   border: 2px solid #1d4ed8;
   color: #1d4ed8;
-  padding: 0.4rem 1rem;
+  padding: 0.4rem 1.2rem; /* Botones un poco más pequeños */
   border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  font-family: 'Bebas Neue', sans-serif;
 }
 .auth-buttons button:hover {
   background-color: #1d4ed8;
   color: white;
+  transform: scale(1.05); /* Efecto de zoom en hover */
 }
 
 /* Añadir espacio para el contenido */
 body {
-  margin-top: 80px; /* Asegura que el contenido no se superponga al header */
+  margin-top: 80px; /* Aseguramos que no se superponga el header */
+  font-family: 'Segoe UI', sans-serif;
 }
 
 /* Responsive para pantallas pequeñas */
@@ -96,8 +102,8 @@ body {
     margin-top: 0.5rem;
   }
 
-  /* Ajuste para pantallas pequeñas, mayor espacio para evitar superposición */
+  /* Ajuste para pantallas pequeñas */
   body {
-    margin-top: 120px; /* Aumentar el margen para pantallas pequeñas */
+    margin-top: 120px; /* Mayor margen para pantallas pequeñas */
   }
 }
