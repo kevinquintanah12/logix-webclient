@@ -120,6 +120,11 @@ export class CotizacionEnvioComponent implements OnInit {
               totalTarifa
               tarifaPeso
               distanciaKm
+              tarifaBase
+              tarifaExtraTemperatura
+              tarifaExtraHumedad
+              trasladoiva
+              ieps
             }
           }
         }
@@ -178,4 +183,3 @@ export class CotizacionEnvioComponent implements OnInit {
     });
   }
 }
-

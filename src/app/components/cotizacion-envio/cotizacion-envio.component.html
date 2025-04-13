@@ -129,17 +129,26 @@
     </div>
 
     <button type="submit" class="btn btn-primary" [disabled]="loader">
+      <div *ngIf="loader" class="spinner-border spinner-border-sm" role="status">
+        <span class="visually-hidden">Calculando...</span>
+      </div>
       {{ loader ? 'Calculando...' : 'Calcular Envío' }}
     </button>
   </form>
 
-  <div *ngIf="tarifa" class="mt-4 alert alert-info">
-    <h5>Resultado de Cotización</h5>
-    <p><strong>Descripción:</strong> {{ tarifa.descripcion }}</p>
-    <p><strong>Distancia (Km):</strong> {{ tarifa.distanciaKm }}</p>
-    <p><strong>Tarifa por Peso:</strong> ${{ tarifa.tarifaPeso }}</p>
-    <p><strong>Total a Pagar:</strong> ${{ tarifa.totalTarifa }}</p>
+  <hr class="my-4">
+
+  <div *ngIf="tarifa" class="mt-4 card">
+    <div class="card-body">
+      <h5 class="card-title">Resultado de Cotización</h5>
+      <p class="card-text"><strong>Descripción:</strong> {{ tarifa.descripcion }}</p>
+      <p class="card-text"><strong>Distancia (Km):</strong> {{ tarifa.distanciaKm }}</p>
+      <p class="card-text"><strong>Tarifa por Peso:</strong> ${{ tarifa.tarifaPeso }}</p>
+      <p class="card-text"><strong>Total a Pagar:</strong> ${{ tarifa.totalTarifa }}</p>
+    </div>
   </div>
+
+  <hr class="my-4">
 
   <div class="form-group mt-4">
     <label for="email">Correo Electrónico:</label>
@@ -158,7 +167,6 @@
     class="btn btn-success mt-2"
     (click)="enviarCotizacion()"
     [disabled]="!emailInput.valid || loader">
-    Enviar Cotización por Correo
+    <i class="bi bi-envelope-fill"></i> Enviar Cotización por Correo
   </button>
 </div>
-
