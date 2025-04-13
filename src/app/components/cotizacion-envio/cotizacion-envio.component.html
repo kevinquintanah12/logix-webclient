@@ -1,0 +1,164 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Cotización de Envío</h2>
+
+  <form #cotizacionForm="ngForm" (ngSubmit)="calcularEnvio(cotizacionForm)">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="tipoProductoId">Tipo de Producto:</label>
+        <select
+          id="tipoProductoId"
+          name="tipoProductoId"
+          class="form-control"
+          required
+          [(ngModel)]="formData.tipoProductoId">
+          <option *ngFor="let tipo of tiposProducto" [value]="tipo.id">
+            {{ tipo.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="origenCdId">Origen (Centro de Distribución):</label>
+        <select
+          id="origenCdId"
+          name="origenCdId"
+          class="form-control"
+          required
+          [(ngModel)]="formData.origenCdId">
+          <option *ngFor="let origen of origenes" [value]="origen.id">
+            {{ origen.ubicacion.ciudad }}, {{ origen.ubicacion.estado }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="destinoId">Destino:</label>
+        <select
+          id="destinoId"
+          name="destinoId"
+          class="form-control"
+          required
+          [(ngModel)]="formData.destinoId">
+          <option *ngFor="let destino of destinos" [value]="destino.id">
+            {{ destino.ciudad }}, {{ destino.estado }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="pesoUnitario">Peso Unitario (kg):</label>
+        <input
+          type="number"
+          id="pesoUnitario"
+          name="pesoUnitario"
+          class="form-control"
+          required
+          min="0.01"
+          step="0.01"
+          [(ngModel)]="formData.pesoUnitario">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="numeroPiezas">Número de Piezas:</label>
+        <input
+          type="number"
+          id="numeroPiezas"
+          name="numeroPiezas"
+          class="form-control"
+          required
+          min="1"
+          [(ngModel)]="formData.numeroPiezas">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="dimensionesLargo">Largo (cm):</label>
+        <input
+          type="number"
+          id="dimensionesLargo"
+          name="dimensionesLargo"
+          class="form-control"
+          required
+          min="0.1"
+          [(ngModel)]="formData.dimensionesLargo">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="dimensionesAncho">Ancho (cm):</label>
+        <input
+          type="number"
+          id="dimensionesAncho"
+          name="dimensionesAncho"
+          class="form-control"
+          required
+          min="0.1"
+          [(ngModel)]="formData.dimensionesAncho">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label for="dimensionesAlto">Alto (cm):</label>
+        <input
+          type="number"
+          id="dimensionesAlto"
+          name="dimensionesAlto"
+          class="form-control"
+          required
+          min="0.1"
+          [(ngModel)]="formData.dimensionesAlto">
+      </div>
+
+      <div class="col-12 mb-3">
+        <label for="descripcion">Descripción del Producto:</label>
+        <textarea
+          id="descripcion"
+          name="descripcion"
+          class="form-control"
+          required
+          [(ngModel)]="formData.descripcion">
+        </textarea>
+      </div>
+
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="envioExpress"
+          name="envioExpress"
+          [(ngModel)]="formData.envioExpress">
+        <label class="form-check-label" for="envioExpress">¿Envío Express?</label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loader">
+      {{ loader ? 'Calculando...' : 'Calcular Envío' }}
+    </button>
+  </form>
+
+  <div *ngIf="tarifa" class="mt-4 alert alert-info">
+    <h5>Resultado de Cotización</h5>
+    <p><strong>Descripción:</strong> {{ tarifa.descripcion }}</p>
+    <p><strong>Distancia (Km):</strong> {{ tarifa.distanciaKm }}</p>
+    <p><strong>Tarifa por Peso:</strong> ${{ tarifa.tarifaPeso }}</p>
+    <p><strong>Total a Pagar:</strong> ${{ tarifa.totalTarifa }}</p>
+  </div>
+
+  <div class="form-group mt-4">
+    <label for="email">Correo Electrónico:</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      class="form-control"
+      [(ngModel)]="email"
+      #emailInput="ngModel"
+      required
+      placeholder="Ingresa tu correo">
+  </div>
+
+  <button
+    class="btn btn-success mt-2"
+    (click)="enviarCotizacion()"
+    [disabled]="!emailInput.valid || loader">
+    Enviar Cotización por Correo
+  </button>
+</div>
+

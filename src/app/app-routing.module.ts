@@ -5,8 +5,9 @@ import { IsLoginGuard } from './guards/is-login.guard';
 import { IsUserGuard } from './guards/is-user.guard';
 import { HeaderComponent } from './components/Header/Header.component';
 import { LandingComponent } from './components/Landing/Landing.component';
-import { MapComponent } from './components/map/map.component'; // Asegúrate de que esta ruta sea correcta
+import { MapComponent } from './components/map/map.component';
 import { TrackerComponent } from './components/tracker/tracker.component';
+import { CotizacionEnvioComponent } from './components/cotizacion-envio/cotizacion-envio.component'; // NUEVA IMPORTACIÓN
 
 const routes: Routes = [
   {
@@ -51,6 +52,11 @@ const routes: Routes = [
         title: 'Tracker | Map'
       },
       {
+        path: 'cotizacion', // NUEVA RUTA
+        component: CotizacionEnvioComponent,
+        title: 'Tracker | Cotización de Envío'
+      },
+      {
         path: 'admin',
         canActivate: [IsAdminGuard],
         loadChildren: () => import('./components/admin/admin.module').then(m => m.AdminModule)
@@ -79,3 +85,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
