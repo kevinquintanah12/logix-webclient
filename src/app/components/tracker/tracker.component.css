@@ -8,13 +8,13 @@
 }
 
 .content {
-    background: linear-gradient(135deg, #003060, #004080); /* Degradado azul */
-    padding: 40px;
-    min-height: 91.4vh; /* Ocupa toda la altura de la pantalla */
-    margin-top: 0; /* Eliminar cualquier margen superior para asegurar que esté alineado */
-    display: flex;
-    flex-direction: column;
-  }
+  background: linear-gradient(135deg, #003060, #004080);
+  padding: 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 .header-icon {
   display: flex;
@@ -23,21 +23,20 @@
 }
 
 .icono-header {
-    margin-top: 120px;
+  margin-top: 40px;
   width: 100px;
   height: 100px;
 }
 
 .content h1 {
   text-align: center;
-  color: white; /* Cambiar a blanco */
+  color: white;
   font-size: 32px;
-  margin-top: 20px;
   font-weight: bold;
   font-family: 'Bebas Neue', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .guia-section {
@@ -48,8 +47,8 @@
 
 .guia-section p {
   font-size: 18px;
-  color: white; /* Cambiar a blanco */
-  margin-bottom: 30px;
+  color: white;
+  margin-bottom: 20px;
   font-weight: 500;
 }
 
@@ -63,44 +62,48 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+.error-input {
+  border-color: red;
+}
+
 .main-btn {
-    background-color: white;  /* Fondo blanco */
-    color: #003060;  /* Letra azul oscuro */
-    font-size: 18px;
-    padding: 12px 24px;
-    border: 2px solid #003060;  /* Borde azul oscuro */
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin-top: 20px;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .main-btn:hover {
-    background-color: #003060; /* Fondo azul oscuro */
-    color: white;  /* Letra blanca cuando pasa el ratón */
-  }
+  background-color: white;
+  color: #003060;
+  font-size: 18px;
+  padding: 12px 24px;
+  border: 2px solid #003060;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-top: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.main-btn:hover {
+  background-color: #003060;
+  color: white;
+}
 
 .resultado {
-  margin: 30px auto;
+  margin: 10px auto;
   max-width: 600px;
   padding: 20px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8); /* Fondo con opacidad */
+  background-color: rgba(255, 255, 255, 0.8);
   font-family: 'Segoe UI', sans-serif;
-  color: #003060; /* Azul oscuro */
+  color: #003060;
 }
 
 .resultado h2,
 .resultado h3 {
   font-family: 'Bebas Neue', sans-serif;
-  color: #003060; /* Azul oscuro */
+  color: #003060;
 }
 
 .timeline {
   list-style: none;
   padding-left: 20px;
-  border-left: 4px solid #003060; /* Azul oscuro */
+  border-left: 4px solid #003060;
   margin-top: 20px;
 }
 
@@ -116,6 +119,19 @@
   left: -10px;
   width: 12px;
   height: 12px;
-  background-color: #003060; /* Azul oscuro */
+  background-color: #003060;
   border-radius: 50%;
 }
+.error-box {
+  max-width: 500px;
+  margin: 20px auto; /* centrar horizontalmente */
+  padding: 15px 20px;
+  background-color: #ffe2e2;
+  color: #b30000;
+  border-left: 6px solid #b30000;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
