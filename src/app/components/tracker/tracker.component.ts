@@ -1,54 +1,98 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common'; // Agregar CommonModule
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Apollo, gql } from 'apollo-angular';
+import { ApolloError } from '@apollo/client/core'; // <- Importamos ApolloError
+
+const GET_ENTREGA = gql`
+  query ($numeroGuia: String!) {
+    entregaPorGuia(numeroGuia: $numeroGuia) {
+      id
+      fechaEntrega
+      estado
+      pin
+      paquete {
+        id
+        numeroGuia
+        producto {
+          id
+          destinatario {
+            id
+            latitud
+            longitud
+            colonia
+            telefono
+            nombre
+            apellidos
+          }
+        }
+      }
+    }
+  }
+`;
 
 @Component({
   selector: 'app-tracker',
   templateUrl: './tracker.component.html',
   styleUrls: ['./tracker.component.css'],
-  standalone: true,  // Este es el indicador que lo hace un componente standalone
-  imports: [CommonModule] // Agregar CommonModule aquí para habilitar las directivas *ngIf, *ngFor, etc.
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class TrackerComponent {
   loader = false;
   form = new FormGroup({
     numeroGuia: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[A-Z0-9]{10}$')
-    ])
+      Validators.pattern('^[A-Z0-9]{10}$'),
+    ]),
   });
 
   resultado: any = null;
   fechaConsulta: Date | null = null;
+  errorMensaje: string | null = null; // <- Variable para error visible
 
-  constructor() {}
+  constructor(private apollo: Apollo) {}
 
-  rastrearPaquete() {
-    const numeroGuia = this.form.get('numeroGuia')?.value;
-    if (!this.form.valid) {
-      alert('Por favor ingrese un número de guía válido.');
+  rastrearPaquete(): void {
+    if (this.form.invalid) {
+      this.errorMensaje = '⚠️ Por favor ingrese un número de guía válido.';
       return;
     }
-
+  
+    const numeroGuia = this.form.value.numeroGuia!;
     this.loader = true;
     this.resultado = null;
-
-    // Simulamos la respuesta de un servicio
-    setTimeout(() => {
-      this.loader = false;
-      this.fechaConsulta = new Date();
-
-      // Simulamos los datos de rastreo
-      this.resultado = {
-        guia: numeroGuia,
-        estado: 'En tránsito',
-        actualizado: this.fechaConsulta?.toLocaleString(),
-        historial: [
-          { estado: 'En tránsito', fecha: '2025-04-08 10:00 AM' },
-          { estado: 'En el centro de distribución', fecha: '2025-04-08 2:00 PM' },
-          { estado: 'En camino al destino', fecha: '2025-04-09 8:00 AM' }
-        ]
-      };
-    }, 2000); // Simula una espera de 2 segundos
+    this.errorMensaje = null;
+  
+    this.apollo
+      .query<any>({
+        query: GET_ENTREGA,
+        variables: { numeroGuia },
+        errorPolicy: 'all',
+      })
+      .subscribe({
+        next: ({ data, errors }) => {
+          this.loader = false;
+          this.fechaConsulta = new Date();
+  
+          if (errors && errors.length > 0) {
+            console.warn('GraphQL Errors:', errors);
+            this.errorMensaje = '❌ No se encontró información para el número de guía.';
+            return;
+          }
+  
+          if (!data.entregaPorGuia) {
+            this.errorMensaje = '❌ No se encontró información para el número de guía.';
+            return;
+          }
+  
+          this.resultado = data.entregaPorGuia;
+        },
+        error: (error) => {
+          console.error('Network Error:', error);
+          this.loader = false;
+          this.errorMensaje = '❌ No se pudo rastrear el paquete. Intente de nuevo más tarde.';
+        },
+      });
   }
-}
+}  
