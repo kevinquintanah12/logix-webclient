@@ -1,10 +1,11 @@
+// tracker.component.ts
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Apollo, gql } from 'apollo-angular';
-import { ApolloError } from '@apollo/client/core'; // <- Importamos ApolloError
+import { ApolloError } from '@apollo/client/core';
 
-const GET_ENTREGA = gql`
+const GET_TRACKER = gql`
   query ($numeroGuia: String!) {
     entregaPorGuia(numeroGuia: $numeroGuia) {
       id
@@ -28,6 +29,9 @@ const GET_ENTREGA = gql`
         }
       }
     }
+    sensoresPorGuia(numeroGuia: $numeroGuia) {
+      placeName
+    }
   }
 `;
 
@@ -49,7 +53,8 @@ export class TrackerComponent {
 
   resultado: any = null;
   fechaConsulta: Date | null = null;
-  errorMensaje: string | null = null; // <- Variable para error visible
+  ruta: { placeName: string }[] = [];
+  errorMensaje: string | null = null;
 
   constructor(private apollo: Apollo) {}
 
@@ -58,15 +63,16 @@ export class TrackerComponent {
       this.errorMensaje = '⚠️ Por favor ingrese un número de guía válido.';
       return;
     }
-  
+
     const numeroGuia = this.form.value.numeroGuia!;
     this.loader = true;
     this.resultado = null;
+    this.ruta = [];
     this.errorMensaje = null;
-  
+
     this.apollo
-      .query<any>({
-        query: GET_ENTREGA,
+      .query<{ entregaPorGuia: any; sensoresPorGuia: { placeName: string }[] }>({
+        query: GET_TRACKER,
         variables: { numeroGuia },
         errorPolicy: 'all',
       })
@@ -74,25 +80,29 @@ export class TrackerComponent {
         next: ({ data, errors }) => {
           this.loader = false;
           this.fechaConsulta = new Date();
-  
+
           if (errors && errors.length > 0) {
             console.warn('GraphQL Errors:', errors);
             this.errorMensaje = '❌ No se encontró información para el número de guía.';
             return;
           }
-  
+
           if (!data.entregaPorGuia) {
             this.errorMensaje = '❌ No se encontró información para el número de guía.';
             return;
           }
-  
+
           this.resultado = data.entregaPorGuia;
+
+          // Filtrar placeName únicos
+          const nombres = data.sensoresPorGuia.map(s => s.placeName);
+          this.ruta = Array.from(new Set(nombres)).map(name => ({ placeName: name }));
         },
-        error: (error) => {
-          console.error('Network Error:', error);
+        error: (networkError: ApolloError) => {
+          console.error('Network Error:', networkError);
           this.loader = false;
           this.errorMensaje = '❌ No se pudo rastrear el paquete. Intente de nuevo más tarde.';
         },
       });
   }
-}  
+}

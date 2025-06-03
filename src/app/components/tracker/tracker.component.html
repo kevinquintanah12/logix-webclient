@@ -1,6 +1,10 @@
 <div class="content">
   <div class="header-icon">
-    <img src="https://firebasestorage.googleapis.com/v0/b/ammiboapijorgeluistuzmoreno.appspot.com/o/9422848.png?alt=media&token=2df5a806-5902-4556-98de-c683822ad07b" alt="Icono" class="icono-header" />
+    <img
+      src="https://firebasestorage.googleapis.com/v0/b/ammiboapijorgeluistuzmoreno.appspot.com/o/9422848.png?alt=media&token=2df5a806-5902-4556-98de-c683822ad07b"
+      alt="Icono"
+      class="icono-header"
+    />
   </div>
 
   <h1>Rastreo de Paquetes</h1>
@@ -12,7 +16,9 @@
       type="text"
       formControlName="numeroGuia"
       placeholder="1SF69LM7JO"
-      [class.error-input]="form.get('numeroGuia')?.invalid && form.get('numeroGuia')?.touched"
+      [class.error-input]="
+        form.get('numeroGuia')?.invalid && form.get('numeroGuia')?.touched
+      "
     />
     <br />
     <button class="main-btn" (click)="rastrearPaquete()" [disabled]="loader">
@@ -23,25 +29,65 @@
   <div class="error-box" *ngIf="errorMensaje">
     {{ errorMensaje }}
   </div>
-  
 
   <div class="loader" *ngIf="loader">
     <img src="https://i.gifer.com/ZZ5H.gif" alt="Cargando..." width="50" />
   </div>
 
+  <!-- Resultado de entrega -->
   <div *ngIf="resultado" class="resultado">
-    <h2>📦 Resultado del Rastreo</h2>
+    <h2>Resultado del Rastreo</h2>
     <h3>Número de guía: {{ resultado.paquete.numeroGuia }}</h3>
     <p><strong>Estado actual:</strong> {{ resultado.estado }}</p>
-    <p><strong>Fecha de entrega:</strong> {{ resultado.fechaEntrega }}</p>
-    <p><strong>Última consulta:</strong> {{ fechaConsulta | date:'medium' }}</p>
 
-    <h4>📍 Destinatario</h4>
+    <!-- Sección del PIN -->
+    <p><strong>PIN de entrega:</strong> {{ resultado.pin }}</p>
+    <p class="pin-message">
+      Proporciona este PIN al repartidor para finalizar tu entrega
+    </p>
+
+    <h4> Destinatario</h4>
     <ul>
-      <li><strong>Nombre:</strong> {{ resultado.paquete.producto.destinatario.nombre }} {{ resultado.paquete.producto.destinatario.apellidos }}</li>
-      <li><strong>Teléfono:</strong> {{ resultado.paquete.producto.destinatario.telefono }}</li>
-      <li><strong>Colonia:</strong> {{ resultado.paquete.producto.destinatario.colonia }}</li>
-      <li><strong>Ubicación:</strong> ({{ resultado.paquete.producto.destinatario.latitud }}, {{ resultado.paquete.producto.destinatario.longitud }})</li>
+      <li>
+        <strong>Nombre:</strong>
+        {{ resultado.paquete.producto.destinatario.nombre }}
+        {{ resultado.paquete.producto.destinatario.apellidos }}
+      </li>
+      <li>
+        <strong>Teléfono:</strong>
+        {{ resultado.paquete.producto.destinatario.telefono }}
+      </li>
+      <li>
+        <strong>Colonia:</strong>
+        {{ resultado.paquete.producto.destinatario.colonia }}
+      </li>
     </ul>
+  </div>
+
+  <!-- Tabla de rutas -->
+  <div *ngIf="ruta.length" class="ruta-section">
+    <div class="ruta-title">Rutas del paquete</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Paso</th>
+          <th>Ubicación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let paso of ruta; let i = index"
+          [class.current-row]="i === 0"
+        >
+          <td>{{ i + 1 }}</td>
+          <td>
+            {{ paso.placeName }}
+            <span *ngIf="i === 0" class="current-label">
+              Ubicación actual
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

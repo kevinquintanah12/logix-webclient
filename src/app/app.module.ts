@@ -1,36 +1,49 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule, provideHttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { ToastrModule } from 'ngx-toastr';
+
+import { provideApollo } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import {
+  ApolloClientOptions,
+  InMemoryCache,
+  split
+} from '@apollo/client/core';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+
+import { AppRoutingModule } from './app-routing.module';
+import { environment } from 'src/environments/environment';
+
 import { AccessService } from './services/access.service';
 import { LoaderService } from './services/loader.service';
+import { CryptographyService } from './services/cryptography.service';
+import { DatabaseService } from './services/database.service';
+import { LoggerService } from './services/logger.service';
+
 import { IsLoginGuard } from './guards/is-login.guard';
 import { IsAdminGuard } from './guards/is-admin.guard';
 import { IsUserGuard } from './guards/is-user.guard';
-import { CryptographyService } from './services/cryptography.service';
-import { RouterModule } from '@angular/router';
-import { DatabaseService } from './services/database.service';
-import { LoggerService } from './services/logger.service';
+
 import { HeaderComponent } from './components/Header/Header.component';
 import { LandingComponent } from './components/Landing/Landing.component';
-import { ToastrModule } from 'ngx-toastr';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from 'src/environments/environment';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
-// Apollo imports
-import { provideApollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
-import { inject } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    LandingComponent
+    LandingComponent,
+    ChatbotComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +52,7 @@ import { inject } from '@angular/core';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    MatIconModule,
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -50,21 +64,51 @@ import { inject } from '@angular/core';
     AccessService,
     LoaderService,
     CryptographyService,
+    DatabaseService,
+    LoggerService,
     IsLoginGuard,
     IsAdminGuard,
     IsUserGuard,
-    DatabaseService,
-    LoggerService,
-    provideHttpClient(),  
+    provideHttpClient(),
     provideApollo((): ApolloClientOptions<any> => {
-      const httpLink = inject(HttpLink); 
+      const token = localStorage.getItem('token') ?? '';
+
+      // HTTP Link con HttpHeaders
+      const httpLinkInstance = inject(HttpLink);
+      const http = httpLinkInstance.create({
+        uri: 'https://logix-ioz0.onrender.com/graphql/',
+        headers: new HttpHeaders({
+          Authorization: token ? `JWT ${token}` : ''
+        })
+      });
+
+      // WebSocket Link para suscripciones
+      const ws = new WebSocketLink({
+        uri: 'wss://logix-ioz0.onrender.com/graphql/',
+        options: {
+          reconnect: true,
+          connectionParams: {
+            Authorization: token ? `JWT ${token}` : ''
+          }
+        }
+      });
+
+      // split: suscripciones VS queries/mutations
+      const link = split(
+        ({ query }) => {
+          const def = getMainDefinition(query);
+          return def.kind === 'OperationDefinition' && def.operation === 'subscription';
+        },
+        ws,
+        http
+      );
+
       return {
         cache: new InMemoryCache(),
-        link: httpLink.create({
-          uri: 'https://logix-ioz0.onrender.com/graphql/',
-        }),
+        link
       };
     }),
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

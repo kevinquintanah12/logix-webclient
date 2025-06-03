@@ -89,7 +89,7 @@
   max-width: 600px;
   padding: 20px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #ffffff;
   font-family: 'Segoe UI', sans-serif;
   color: #003060;
 }
@@ -100,31 +100,15 @@
   color: #003060;
 }
 
-.timeline {
-  list-style: none;
-  padding-left: 20px;
-  border-left: 4px solid #003060;
-  margin-top: 20px;
+.pin-message {
+  margin: 8px 0 16px;
+  font-style: italic;
+  color: #555;
 }
 
-.timeline li {
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 20px;
-}
-
-.timeline .dot {
-  position: absolute;
-  top: 0;
-  left: -10px;
-  width: 12px;
-  height: 12px;
-  background-color: #003060;
-  border-radius: 50%;
-}
 .error-box {
   max-width: 500px;
-  margin: 20px auto; /* centrar horizontalmente */
+  margin: 20px auto;
   padding: 15px 20px;
   background-color: #ffe2e2;
   color: #b30000;
@@ -135,3 +119,66 @@
   text-align: center;
 }
 
+/* Sección de rutas */
+.ruta-section {
+  text-align: center;
+  margin: 30px auto;
+  max-width: 600px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.ruta-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: white;
+}
+
+/* TABLA BLANCA CON TEXTO NEGRO */
+.ruta-section table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ruta-section th,
+.ruta-section td {
+  padding: 12px 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  color: #000000;
+  text-align: left;
+}
+
+.ruta-section th {
+  background-color: #f0f0f0;
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+.ruta-section tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+/* Destacar la fila 1 como ubicación actual */
+.current-row td:first-child {
+  border-left: 4px solid #003060;
+  padding-left: 4px;
+}
+.current-row td {
+  font-weight: bold;
+}
+
+/* Etiqueta "Ubicación actual" junto al texto */
+.current-label {
+  margin-left: 8px;
+  padding: 2px 6px;
+  background-color: #003060;
+  color: #ffffff;
+  font-size: 12px;
+  border-radius: 4px;
+  font-family: 'Segoe UI', sans-serif;
+}
